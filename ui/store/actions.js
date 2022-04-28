@@ -35,8 +35,8 @@ import {
 import { EVENT } from '../../shared/constants/metametrics';
 import { parseSmartTransactionsError } from '../pages/swaps/swaps.util';
 import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
-import * as actionConstants from './actionConstants';
 import { setNewCustomNetworkAdded } from '../ducks/app/app';
+import * as actionConstants from './actionConstants';
 
 let background = null;
 let promisifiedBackground = null;
@@ -3637,7 +3637,7 @@ export function cancelQRHardwareSignRequest() {
 export function addCustomNetwork(customRpc) {
   return async (dispatch) => {
     try {
-      dispatch(setNewCustomNetworkAdded(customRpc))
+      dispatch(setNewCustomNetworkAdded(customRpc));
       await promisifiedBackground.addCustomNetwork(customRpc);
     } catch (error) {
       log.error(error);

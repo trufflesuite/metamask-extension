@@ -391,7 +391,7 @@ export default function reduceApp(state = {}, action) {
       return {
         ...appState,
         newCustomNetworkAdded: action.value,
-      }
+      };
     default:
       return appState;
   }
