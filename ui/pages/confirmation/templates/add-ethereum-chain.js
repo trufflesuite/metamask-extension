@@ -190,7 +190,13 @@ function getValues(pendingApproval, t, actions) {
                   interactive: true,
                   trigger: 'mouseenter',
                   html: (
-                    <>
+                    <div
+                      style={{
+                        width: '180px',
+                        margin: '16px',
+                        textAlign: 'left',
+                      }}
+                    >
                       {t('someNetworksMayPoseSecurity')}{' '}
                       <a
                         key="zendesk_page_link"
@@ -201,7 +207,7 @@ function getValues(pendingApproval, t, actions) {
                       >
                         {t('learnMoreUpperCase')}
                       </a>
-                    </>
+                    </div>
                   ),
                 },
                 children: [
@@ -210,7 +216,10 @@ function getValues(pendingApproval, t, actions) {
                     key: 'info-circle',
                     props: {
                       className: 'fas fa-info-circle',
-                      style: { marginLeft: '4px' },
+                      style: {
+                        marginLeft: '4px',
+                        color: 'var(--color-icon-default)',
+                      },
                     },
                   },
                 ],
