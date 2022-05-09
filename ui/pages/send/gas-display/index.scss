@@ -1,16 +1,16 @@
 .gas-display {
-    .transaction-detail-rows {
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid var(--color-border-default);
-        margin: 8px 20px;
+  .transaction-detail-rows {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-default);
+    margin: 8px 20px;
 
-        .transaction-item {
-            border-bottom: 1px solid var(--color-border-default);
-        }
+    .transaction-item {
+      border-bottom: 1px solid var(--color-border-default);
     }
+  }
 
-    &__link {
-        text-transform: lowercase;
-    }
+  &__link {
+    text-transform: lowercase;
+  }
 }
