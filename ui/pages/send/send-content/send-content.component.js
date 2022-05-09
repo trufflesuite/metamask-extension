@@ -50,6 +50,8 @@ export default class SendContent extends Component {
     chainId: PropTypes.string,
     showBuyModal: PropTypes.func,
     showAccountDetails: PropTypes.func,
+    useNonceField: PropTypes.bool,
+    useNativeCurrencyAsPrimaryCurrency: PropTypes.bool,
   };
 
   render() {

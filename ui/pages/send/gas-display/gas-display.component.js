@@ -9,6 +9,8 @@ import {
 import UserPreferencedCurrencyDisplay from '../../../components/app/user-preferenced-currency-display/user-preferenced-currency-display.component';
 import GasTiming from '../../../components/app/gas-timing/gas-timing.component';
 import InfoTooltip from '../../../components/ui/info-tooltip/info-tooltip';
+import LedgerInstructionField from '../../../components/app/ledger-instruction-field/ledger-instruction-field';
+import TextField from '../../../components/ui/text-field';
 import Typography from '../../../components/ui/typography/typography';
 import Button from '../../../components/ui/button';
 import { TYPOGRAPHY } from '../../../helpers/constants/design-system';
@@ -22,6 +24,31 @@ import ActionableMessage from '../../../components/ui/actionable-message/actiona
 const renderHeartBeatIfNotInTest = () =>
   process.env.IN_TEST ? null : <LoadingHeartBeat />;
 export default class GasDisplay extends Component {
+  static propTypes = {
+    primaryTotalTextOverride: PropTypes.string,
+    secondaryTotalTextOverride: PropTypes.string,
+    hexTransactionTotal: PropTypes.string,
+    useNonceField: PropTypes.bool,
+    customNonceValue: PropTypes.string,
+    updateCustomNonce: PropTypes.func,
+    nextNonce: PropTypes.number,
+    getNextNonce: PropTypes.func,
+    draftTransaction: PropTypes.object,
+    useNativeCurrencyAsPrimaryCurrency: PropTypes.bool,
+    primaryTotalTextOverrideMaxAmount: PropTypes.string,
+    maxFeePerGas: PropTypes.string,
+    maxPriorityFeePerGas: PropTypes.string,
+    isMainnet: PropTypes.bool,
+    showLedgerSteps: PropTypes.bool,
+    showBuyModal: PropTypes.func,
+    isBuyableChain: PropTypes.bool,
+    hexMinimumTransactionFee: PropTypes.string,
+    hexMaximumTransactionFee: PropTypes.string,
+    nativeCurrency: PropTypes.string,
+    chainId: PropTypes.string,
+    showAccountDetails: PropTypes.func,
+  };
+
   static contextTypes = {
     t: PropTypes.func,
     trackEvent: PropTypes.func,
@@ -141,7 +168,9 @@ export default class GasDisplay extends Component {
       ) {
         return (
           <div className="confirm-page-container-content__total-value">
-            <LoadingHeartBeat estimateUsed={this.props.txData?.userFeeLevel} />
+            <LoadingHeartBeat
+              estimateUsed={this.props.draftTransaction?.userFeeLevel}
+            />
             <UserPreferencedCurrencyDisplay
               type={SECONDARY}
               key="total-detail-text"
@@ -157,100 +186,93 @@ export default class GasDisplay extends Component {
     };
 
     const renderGasDetailsItem = () => {
-      return this.supportsEIP1559V2 ? (
-        <GasDetailsItem
-          key="gas_details"
-          userAcknowledgedGasMissing={userAcknowledgedGasMissing}
-        />
-      ) : (
-        <div className="transaction-item">
-          <TransactionDetailItem
-            key="gas-item"
-            detailTitle={
-              <>
-                {t('transactionDetailGasHeading')}
-                <InfoTooltip
-                  contentText={
-                    <>
-                      <p>
-                        {t('transactionDetailGasTooltipIntro', [
-                          isMainnet ? t('networkNameEthereum') : '',
-                        ])}
-                      </p>
-                      <p>{t('transactionDetailGasTooltipExplanation')}</p>
-                      <p>
-                        <a
-                          href="https://community.metamask.io/t/what-is-gas-why-do-transactions-take-so-long/3172"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {t('transactionDetailGasTooltipConversion')}
-                        </a>
-                      </p>
-                    </>
-                  }
-                  position="top"
-                >
-                  <i className="fa fa-info-circle" />
-                </InfoTooltip>
-              </>
-            }
-            detailText={
-              <div className="confirm-page-container-content__currency-container test">
+      <div className="transaction-item">
+        <TransactionDetailItem
+          key="gas-item"
+          detailTitle={
+            <>
+              {t('transactionDetailGasHeading')}
+              <InfoTooltip
+                contentText={
+                  <>
+                    <p>
+                      {t('transactionDetailGasTooltipIntro', [
+                        isMainnet ? t('networkNameEthereum') : '',
+                      ])}
+                    </p>
+                    <p>{t('transactionDetailGasTooltipExplanation')}</p>
+                    <p>
+                      <a
+                        href="https://community.metamask.io/t/what-is-gas-why-do-transactions-take-so-long/3172"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t('transactionDetailGasTooltipConversion')}
+                      </a>
+                    </p>
+                  </>
+                }
+                position="top"
+              >
+                <i className="fa fa-info-circle" />
+              </InfoTooltip>
+            </>
+          }
+          detailText={
+            <div className="confirm-page-container-content__currency-container test">
+              {renderHeartBeatIfNotInTest()}
+              <UserPreferencedCurrencyDisplay
+                type={SECONDARY}
+                value={hexMinimumTransactionFee}
+                hideLabel={Boolean(useNativeCurrencyAsPrimaryCurrency)}
+              />
+            </div>
+          }
+          detailTotal={
+            <div className="confirm-page-container-content__currency-container">
+              {renderHeartBeatIfNotInTest()}
+              <UserPreferencedCurrencyDisplay
+                type={PRIMARY}
+                value={hexMinimumTransactionFee}
+                hideLabel={!useNativeCurrencyAsPrimaryCurrency}
+                numberOfDecimals={6}
+              />
+            </div>
+          }
+          subText={
+            <>
+              <strong key="editGasSubTextFeeLabel">
+                {t('editGasSubTextFeeLabel')}
+              </strong>
+              <div
+                key="editGasSubTextFeeValue"
+                className="confirm-page-container-content__currency-container"
+              >
                 {renderHeartBeatIfNotInTest()}
                 <UserPreferencedCurrencyDisplay
-                  type={SECONDARY}
-                  value={hexMinimumTransactionFee}
-                  hideLabel={Boolean(useNativeCurrencyAsPrimaryCurrency)}
-                />
-              </div>
-            }
-            detailTotal={
-              <div className="confirm-page-container-content__currency-container">
-                {renderHeartBeatIfNotInTest()}
-                <UserPreferencedCurrencyDisplay
+                  key="editGasSubTextFeeAmount"
                   type={PRIMARY}
-                  value={hexMinimumTransactionFee}
+                  value={hexMaximumTransactionFee}
                   hideLabel={!useNativeCurrencyAsPrimaryCurrency}
-                  numberOfDecimals={6}
                 />
               </div>
-            }
-            subText={
-              <>
-                <strong key="editGasSubTextFeeLabel">
-                  {t('editGasSubTextFeeLabel')}
-                </strong>
-                <div
-                  key="editGasSubTextFeeValue"
-                  className="confirm-page-container-content__currency-container"
-                >
-                  {renderHeartBeatIfNotInTest()}
-                  <UserPreferencedCurrencyDisplay
-                    key="editGasSubTextFeeAmount"
-                    type={PRIMARY}
-                    value={hexMaximumTransactionFee}
-                    hideLabel={!useNativeCurrencyAsPrimaryCurrency}
-                  />
-                </div>
-              </>
-            }
-            subTitle={
-              <>
-                <GasTiming
-                  maxPriorityFeePerGas={hexWEIToDecGWEI(
-                    maxPriorityFeePerGas ||
-                      draftTransaction.txParams.maxPriorityFeePerGas,
-                  )}
-                  maxFeePerGas={hexWEIToDecGWEI(
-                    maxFeePerGas || draftTransaction.txParams.maxFeePerGas,
-                  )}
-                />
-              </>
-            }
-          />
-        </div>
-      );
+            </>
+          }
+          subTitle={
+            <>
+              <GasTiming
+                maxPriorityFeePerGas={hexWEIToDecGWEI(
+                  maxPriorityFeePerGas ||
+                    draftTransaction.txParams.maxPriorityFeePerGas,
+                )}
+                maxFeePerGas={hexWEIToDecGWEI(
+                  maxFeePerGas || draftTransaction.txParams.maxFeePerGas,
+                )}
+              />
+            </>
+          }
+        />
+      </div>;
     };
 
     return (
@@ -286,7 +308,7 @@ export default class GasDisplay extends Component {
           {nonceField}
           {showLedgerSteps ? (
             <LedgerInstructionField
-              showDataInstruction={Boolean(txData.txParams?.data)}
+              showDataInstruction={Boolean(draftTransaction.txParams?.data)}
             />
           ) : null}
         </div>
