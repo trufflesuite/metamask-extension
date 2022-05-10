@@ -23,6 +23,7 @@ export default class ConfirmPageContainerContent extends Component {
     dataComponent: PropTypes.node,
     dataHexComponent: PropTypes.node,
     detailsComponent: PropTypes.node,
+    transactionPreviewComponent: PropTypes.node,
     errorKey: PropTypes.string,
     errorMessage: PropTypes.string,
     hideSubtitle: PropTypes.bool,
@@ -57,17 +58,17 @@ export default class ConfirmPageContainerContent extends Component {
   };
 
   renderContent() {
-    const { detailsComponent, dataComponent } = this.props;
+    const { detailsComponent, dataComponent, transactionPreviewComponent } = this.props;
 
-    if (detailsComponent && dataComponent) {
+    if (detailsComponent && dataComponent && transactionPreviewComponent) {
       return this.renderTabs();
     }
-    return detailsComponent || dataComponent;
+    return detailsComponent || dataComponent || transactionPreviewComponent;
   }
 
   renderTabs() {
     const { t } = this.context;
-    const { detailsComponent, dataComponent, dataHexComponent } = this.props;
+    const { detailsComponent, dataComponent, dataHexComponent, transactionPreviewComponent } = this.props;
 
     return (
       <Tabs>
@@ -88,6 +89,11 @@ export default class ConfirmPageContainerContent extends Component {
             {dataHexComponent}
           </Tab>
         )}
+        {transactionPreviewComponent && 
+          (<Tab className="confirm-page-container-content__tab" name="Preview">
+            {transactionPreviewComponent}
+          </Tab>)
+        }
       </Tabs>
     );
   }
