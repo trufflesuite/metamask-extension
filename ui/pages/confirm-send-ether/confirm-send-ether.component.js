@@ -28,7 +28,7 @@ export default class ConfirmSendEther extends Component {
 
   render() {
     const hideData = this.shouldHideData();
-
+    
     return (
       <ConfirmTransactionBase
         actionKey="confirm"

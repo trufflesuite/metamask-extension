@@ -23,6 +23,8 @@ import CopyRawData from '../../components/app/transaction-decoding/components/ui
 
 import { PRIMARY, SECONDARY } from '../../helpers/constants/common';
 import TextField from '../../components/ui/text-field';
+import Button from '../../components/ui/button';
+
 import ActionableMessage from '../../components/ui/actionable-message';
 import Disclosure from '../../components/ui/disclosure';
 import { EVENT } from '../../../shared/constants/metametrics';
@@ -113,6 +115,7 @@ export default class ConfirmTransactionBase extends Component {
     contentComponent: PropTypes.node,
     dataComponent: PropTypes.node,
     dataHexComponent: PropTypes.node,
+    transactionPreviewComponent: PropTypes.node,
     hideData: PropTypes.bool,
     hideSubtitle: PropTypes.bool,
     tokenAddress: PropTypes.string,
@@ -677,6 +680,32 @@ export default class ConfirmTransactionBase extends Component {
       )
     );
   }
+  renderTransactionPreview(functionType) {
+    //const networkName = NETWORK_TO_NAME_MAP[0x3];
+    //console.log({
+//      txData: this.props && this.props.txData
+    //})
+    const networkName = NETWORK_TO_NAME_MAP[this.props.txData.chainId] || `Unknown network id: 0x${this.props.txData.chainId.toString(16)}`;
+    const blockNumber = 123456;
+    //todo: get the _actual_ latest blocknumber
+    return (<div className="transaction-preview">
+      <Typography variant={TYPOGRAPHY.Paragraph} align="left">
+        Safely run this transaction on a local, temporary copy of Ethereum Mainnet before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
+      </Typography>
+      <Typography variant={TYPOGRAPHY.Paragraph} align="left">
+        The transaction will:
+      </Typography>
+      <ul>
+        <li>be run <i>locally</i></li>
+        <li>on <i>{networkName}</i> block <i>{blockNumber}</i></li>
+        <li>and cost 0 <i>Ether</i></li>
+      </ul>
+      <Typography variant={TYPOGRAPHY.Paragraph} align="left">
+      For more information visit the <a href="http://trufflesuite.com">Transaction Insights Guide.</a>
+      </Typography>
+      <Button >Preview</Button>
+    </div>);
+  }
 
   renderDataHex(functionType) {
     const { t } = this.context;
@@ -1075,6 +1104,7 @@ export default class ConfirmTransactionBase extends Component {
           detailsComponent={this.renderDetails()}
           dataComponent={this.renderData(functionType)}
           dataHexComponent={this.renderDataHex(functionType)}
+          transactionPreviewComponent={this.renderTransactionPreview(functionType)}
           contentComponent={contentComponent}
           nonce={customNonceValue || nonce}
           unapprovedTxCount={unapprovedTxCount}

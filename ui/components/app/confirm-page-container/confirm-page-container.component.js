@@ -63,6 +63,7 @@ export default class ConfirmPageContainer extends Component {
     errorMessage: PropTypes.string,
     dataComponent: PropTypes.node,
     dataHexComponent: PropTypes.node,
+    transactionPreviewComponent: PropTypes.node,
     detailsComponent: PropTypes.node,
     tokenAddress: PropTypes.string,
     nonce: PropTypes.string,
@@ -122,6 +123,7 @@ export default class ConfirmPageContainer extends Component {
       detailsComponent,
       dataComponent,
       dataHexComponent,
+      transactionPreviewComponent,
       onCancelAll,
       onCancel,
       onSubmit,
@@ -236,6 +238,7 @@ export default class ConfirmPageContainer extends Component {
               detailsComponent={detailsComponent}
               dataComponent={dataComponent}
               dataHexComponent={dataHexComponent}
+              transactionPreviewComponent={transactionPreviewComponent}
               errorMessage={errorMessage}
               errorKey={errorKey}
               tokenAddress={tokenAddress}

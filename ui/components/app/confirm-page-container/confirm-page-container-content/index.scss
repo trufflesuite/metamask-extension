@@ -101,3 +101,17 @@
     position: relative;
   }
 }
+
+.transaction-preview {
+  padding: 24px;
+  p, ul {
+    font-size: 0.75rem;
+    margin-bottom: 20px;
+  }
+
+  ul li {
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+}
