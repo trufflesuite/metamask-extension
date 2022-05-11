@@ -178,6 +178,18 @@ function getCopyTargets(shouldIncludeLockdown) {
       src: `./app/phishing.html`,
       dest: `phishing.html`,
     },
+    {
+      src: `./app/clairvoyance.html`,
+      dest: `clairvoyance.html`,
+    },
+    {
+      src: `./app/scripts/ganache.js`,
+      dest: `ganache.js`,
+    },
+    {
+      src: `./app/scripts/clairvoyance.js`,
+      dest: `clairvoyance.js`,
+    },
   ];
 
   const languageTags = new Set();
