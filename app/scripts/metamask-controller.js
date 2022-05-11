@@ -59,7 +59,7 @@ import {
   GAS_DEV_API_BASE_URL,
   SWAPS_CLIENT_ID,
 } from '../../shared/constants/swaps';
-import { MAINNET_CHAIN_ID,NETWORK_TO_NAME_MAP} from '../../shared/constants/network';
+import { MAINNET_CHAIN_ID} from '../../shared/constants/network';
 import {
   DEVICE_NAMES,
   KEYRING_TYPES,
@@ -143,6 +143,7 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+import {TransactionPreviewController} from "./transaction-preview-controller"
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -151,47 +152,6 @@ export const METAMASK_CONTROLLER_EVENTS = {
   // TODO: Add this and similar enums to @metamask/controllers and export them
   APPROVAL_STATE_CHANGE: 'ApprovalController:stateChange',
 };
-
-export class TransactionPreviewController {
-  blockTracker;
-  
-  constructor(blockTracker) {
-    this.blockTracker = blockTracker;
-  }
-/*
-needed to construct the preview and debug urls: 
-* raw transaction
-* from address
-* to address
-* network id
-* chain id
-* current "latest" block number
-* network URL
-*/
-  getTransactionPreviewData(tx) {
-    const latestBlock = this.blockTracker.getCurrentBlock();
-    const latestBlockNumber = Number(latestBlock);
-    const {
-      chainId,
-      metamaskNetworkId,
-      txParams: {data,from,gas,maxFeePerGas,maxPriorityFeePerGas,value}
-    } = tx;
-
-    return {
-      previewQuery: `blockNumber=${latestBlockNumber}`,
-      debugQuery: `blockNumber=${latestBlockNumber}&action=debug`,
-      networkName: NETWORK_TO_NAME_MAP[chainId],
-      latestBlockNumber: latestBlockNumber
-    };
-/*
-txData: {"chainId":"0x4","dappSuggestedGasFees":{"gas":"0x31413"},"defaultGasEstimates":{"estimateType":"medium","gas":"0x31413","maxFeePerGas":"5e21a274","maxPriorityFeePerGas":"59682f00"},"history":[{"chainId":"0x4","dappSuggestedGasFees":{"gas":"0x31413"},"id":4202467449014280,"loadingDefaults":true,"metamaskNetworkId":"4","origin":"https://metamask.github.io","originalGasEstimate":"0x31413","sendFlowHistory":[],"status":"unapproved","time":1652234288908,"txParams":{"data":"0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000808190555061023b806100686000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632e1a7d4d1461005c5780638da5cb5b1461009d578063d0e30db0146100f4575b600080fd5b34801561006857600080fd5b5061008760048036038101908080359060200190929190505050610112565b6040518082815260200191505060405180910390f35b3480156100a957600080fd5b506100b26101d0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100fc6101f6565b6040518082815260200191505060405180910390f35b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561017057600080fd5b8160008082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f193505050501580156101c5573d6000803e3d6000fd5b506000549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60003460008082825401925050819055506000549050905600a165627a7a72305820f237db3ec816a52589d82512117bc85bc08d3537683ffeff9059108caf3e5d400029","from":"0x220fa3a4f0eb1e1af64c7841aea3cde4e45bb442","gas":"0x31413","value":"0x0"},"type":"contractDeployment","userEditedGasLimit":false},[{"note":"Added new unapproved transaction.","op":"add","path":"/txParams/maxFeePerGas","timestamp":1652234289450,"value":"0x5e21a274"},{"op":"add","path":"/txParams/maxPriorityFeePerGas","value":"0x59682f00"},{"op":"replace","path":"/loadingDefaults","value":false},{"op":"add","path":"/userFeeLevel","value":"medium"},{"op":"add","path":"/defaultGasEstimates","value":{"estimateType":"medium","gas":"0x31413","maxFeePerGas":"5e21a274","maxPriorityFeePerGas":"59682f00"}}]],"id":4202467449014280,"loadingDefaults":false,"metamaskNetworkId":"4","origin":"https://metamask.github.io","originalGasEstimate":"0x31413","sendFlowHistory":[],"status":"unapproved","time":1652234288908,"txParams":{"data":"0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000808190555061023b806100686000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632e1a7d4d1461005c5780638da5cb5b1461009d578063d0e30db0146100f4575b600080fd5b34801561006857600080fd5b5061008760048036038101908080359060200190929190505050610112565b6040518082815260200191505060405180910390f35b3480156100a957600080fd5b506100b26101d0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100fc6101f6565b6040518082815260200191505060405180910390f35b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561017057600080fd5b8160008082825403925050819055503373ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f193505050501580156101c5573d6000803e3d6000fd5b506000549050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60003460008082825401925050819055506000549050905600a165627a7a72305820f237db3ec816a52589d82512117bc85bc08d3537683ffeff9059108caf3e5d400029","from":"0x220fa3a4f0eb1e1af64c7841aea3cde4e45bb442","gas":"0x31413","maxFeePerGas":"0x5e21a274","maxPriorityFeePerGas":"0x59682f00","value":"0x0"},"type":"contractDeployment","userEditedGasLimit":false,"userFeeLevel":"medium"}
-*/
-  }
-
-  unsubscribeTransactionPreviewData(handler) {
-    //todo: unsubscribe
-  }
-}
 
 export default class MetamaskController extends EventEmitter {
   /**
@@ -259,7 +219,6 @@ export default class MetamaskController extends EventEmitter {
     this.initializeProvider();
     this.provider = this.networkController.getProviderAndBlockTracker().provider;
     this.blockTracker = this.networkController.getProviderAndBlockTracker().blockTracker;
-    this.transactionPreviewController = new TransactionPreviewController(this.blockTracker);
 
     this.preferencesController = new PreferencesController({
       initState: initState.PreferencesController,
@@ -269,6 +228,7 @@ export default class MetamaskController extends EventEmitter {
       provider: this.provider,
       migrateAddressBookState: this.migrateAddressBookState.bind(this),
     });
+    this.transactionPreviewController = new TransactionPreviewController(this.blockTracker, this.preferencesController);
 
     this.tokensController = new TokensController({
       onPreferencesStateChange: this.preferencesController.store.subscribe.bind(

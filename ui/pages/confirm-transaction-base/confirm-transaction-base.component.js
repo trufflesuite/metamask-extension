@@ -683,11 +683,11 @@ export default class ConfirmTransactionBase extends Component {
   renderTransactionPreview(functionType) {
     const previewQuery = this.state.previewQuery;
     function preview() {
-      global.platform.openPageInBrowser("ganache.html", previewQuery);
+      global.platform.openPageInBrowser("clairvoyance.html", previewQuery);
     }
     return (<div className="transaction-preview">
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
-        Safely run this transaction on a local, temporary copy of Ethereum Mainnet before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
+        Safely run this transaction on a local, temporary copy of Ethereum {this.state.networkName} before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
       </Typography>
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
         The transaction will:
@@ -698,7 +698,7 @@ export default class ConfirmTransactionBase extends Component {
         <li>and cost 0 <i>Ether</i></li>
       </ul>
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
-      For more information visit the <a href="http://trufflesuite.com">Transaction Insights Guide.</a>
+      For more information visit the <a href="https://trufflesuite.github.io/clairvoyance/transaction-insight-guide.html">Transaction Insights Guide.</a>
       </Typography>
       <Button onClick={preview} >Preview</Button>
     </div>);
