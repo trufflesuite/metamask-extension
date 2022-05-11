@@ -698,7 +698,7 @@ export default class ConfirmTransactionBase extends Component {
         <li>and cost 0 <i>Ether</i></li>
       </ul>
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
-      For more information visit the <a href="https://trufflesuite.github.io/clairvoyance/transaction-insight-guide.html">Transaction Insights Guide.</a>
+      For more information visit the <a href="https://trufflesuite.github.io/clairvoyance/transaction-insight-guide.html" target="_blank">Transaction Insights Guide.</a>
       </Typography>
       <Button onClick={preview} >Preview</Button>
     </div>);
