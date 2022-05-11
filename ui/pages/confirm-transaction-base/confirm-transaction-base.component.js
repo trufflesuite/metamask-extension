@@ -681,6 +681,10 @@ export default class ConfirmTransactionBase extends Component {
     );
   }
   renderTransactionPreview(functionType) {
+    const previewQuery = this.state.previewQuery;
+    function preview() {
+      global.platform.openPageInBrowser("ganache.html", previewQuery);
+    }
     return (<div className="transaction-preview">
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
         Safely run this transaction on a local, temporary copy of Ethereum Mainnet before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
@@ -696,7 +700,7 @@ export default class ConfirmTransactionBase extends Component {
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
       For more information visit the <a href="http://trufflesuite.com">Transaction Insights Guide.</a>
       </Typography>
-      <Button href={this.state.previewUrl}>Preview</Button>
+      <Button onClick={preview} >Preview</Button>
     </div>);
   }
 

@@ -139,6 +139,25 @@ export default class ExtensionPlatform {
     }
   }
 
+  openPageInBrowser(
+    page = null,
+    queryString = null
+  ) {
+    let extensionURL = browser.runtime.getURL(page ?? 'home.html');
+
+    if (queryString) {
+      extensionURL += `?${queryString}`;
+    }
+
+    this.openTab({ url: extensionURL });
+    if (
+      getEnvironmentType() !== ENVIRONMENT_TYPE_BACKGROUND &&
+      !keepWindowOpen
+    ) {
+      window.close();
+    }
+  }
+
   getPlatformInfo(cb) {
     try {
       const platformInfo = browser.runtime.getPlatformInfo();

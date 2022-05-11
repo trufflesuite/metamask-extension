@@ -178,8 +178,8 @@ needed to construct the preview and debug urls:
     } = tx;
 
     return {
-      previewUrl: `http://google.com?q=${latestBlockNumber}`,
-      debugUrl: "http://google.com?q=${latestBlockNumber}",
+      previewQuery: `blockNumber=${latestBlockNumber}`,
+      debugQuery: `blockNumber=${latestBlockNumber}&action=debug`,
       networkName: NETWORK_TO_NAME_MAP[chainId],
       latestBlockNumber: latestBlockNumber
     };
