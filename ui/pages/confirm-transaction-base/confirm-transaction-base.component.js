@@ -48,7 +48,6 @@ import GasDetailsItem from '../../components/app/gas-details-item';
 import GasTiming from '../../components/app/gas-timing/gas-timing.component';
 import LedgerInstructionField from '../../components/app/ledger-instruction-field';
 import MultiLayerFeeMessage from '../../components/app/multilayer-fee-message';
-
 import {
   COLORS,
   FONT_STYLE,
@@ -59,6 +58,7 @@ import {
   getGasFeeEstimatesAndStartPolling,
   addPollingTokenToAppState,
   removePollingTokenFromAppState,
+  getTransactionPreviewData
 } from '../../store/actions';
 
 import Typography from '../../components/ui/typography/typography';
@@ -681,13 +681,6 @@ export default class ConfirmTransactionBase extends Component {
     );
   }
   renderTransactionPreview(functionType) {
-    //const networkName = NETWORK_TO_NAME_MAP[0x3];
-    //console.log({
-//      txData: this.props && this.props.txData
-    //})
-    const networkName = NETWORK_TO_NAME_MAP[this.props.txData.chainId] || `Unknown network id: 0x${this.props.txData.chainId.toString(16)}`;
-    const blockNumber = 123456;
-    //todo: get the _actual_ latest blocknumber
     return (<div className="transaction-preview">
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
         Safely run this transaction on a local, temporary copy of Ethereum Mainnet before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
@@ -697,13 +690,13 @@ export default class ConfirmTransactionBase extends Component {
       </Typography>
       <ul>
         <li>be run <i>locally</i></li>
-        <li>on <i>{networkName}</i> block <i>{blockNumber}</i></li>
+        <li>on <i>{this.state.networkName},</i> block <i>{this.state.latestBlockNumber}</i></li>
         <li>and cost 0 <i>Ether</i></li>
       </ul>
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
       For more information visit the <a href="http://trufflesuite.com">Transaction Insights Guide.</a>
       </Typography>
-      <Button >Preview</Button>
+      <Button href={this.state.previewUrl}>Preview</Button>
     </div>);
   }
 
@@ -998,12 +991,16 @@ export default class ConfirmTransactionBase extends Component {
     getGasFeeEstimatesAndStartPolling().then((pollingToken) => {
       if (this._isMounted) {
         addPollingTokenToAppState(pollingToken);
+        
         this.setState({ pollingToken });
       } else {
         disconnectGasFeeEstimatePoller(pollingToken);
         removePollingTokenFromAppState(this.state.pollingToken);
       }
     });
+
+    getTransactionPreviewData(this.props.txData).then(previewData => this.setState(previewData));
+
     window.addEventListener('beforeunload', this._beforeUnloadForGasPolling);
   }
 

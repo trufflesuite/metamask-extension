@@ -1856,6 +1856,7 @@ export default class TransactionController extends EventEmitter {
   }
 
   async _onLatestBlock(blockNumber) {
+
     try {
       await this.pendingTxTracker.updatePendingTxs();
     } catch (err) {

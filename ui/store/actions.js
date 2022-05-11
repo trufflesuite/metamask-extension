@@ -3304,6 +3304,10 @@ export function getGasFeeEstimatesAndStartPolling() {
   return promisifiedBackground.getGasFeeEstimatesAndStartPolling();
 }
 
+export function getTransactionPreviewData(tx) {
+  return promisifiedBackground.getTransactionPreviewData(tx);
+}
+
 /**
  * Informs the GasFeeController that a specific token is no longer requiring
  * gas fee estimates. If all tokens unsubscribe the controller stops polling.
