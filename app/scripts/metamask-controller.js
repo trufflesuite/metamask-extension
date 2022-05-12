@@ -228,7 +228,7 @@ export default class MetamaskController extends EventEmitter {
       provider: this.provider,
       migrateAddressBookState: this.migrateAddressBookState.bind(this),
     });
-    this.transactionPreviewController = new TransactionPreviewController(this.blockTracker, this.preferencesController);
+    this.transactionPreviewController = new TransactionPreviewController(this.blockTracker, this.preferencesController, this.getPendingNonce.bind(this));
 
     this.tokensController = new TokensController({
       onPreferencesStateChange: this.preferencesController.store.subscribe.bind(
