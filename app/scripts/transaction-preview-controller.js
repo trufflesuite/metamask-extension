@@ -40,7 +40,7 @@ export class TransactionPreviewController {
     `tx=${JSON.stringify(txObj)}`].join("&");
 
     return {
-      previewUrl: "https://trufflesuite.github.io/clairvoyance/?" + previewQuery,
+      previewQuery,
       networkName: NETWORK_TO_NAME_MAP[chainId],
       latestBlockNumber: Number(latestBlock).toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     };
