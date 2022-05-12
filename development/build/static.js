@@ -183,10 +183,6 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: `clairvoyance.html`,
     },
     {
-      src: `./app/scripts/ganache.js`,
-      dest: `ganache.js`,
-    },
-    {
       src: `./app/scripts/clairvoyance.js`,
       dest: `clairvoyance.js`,
     },
