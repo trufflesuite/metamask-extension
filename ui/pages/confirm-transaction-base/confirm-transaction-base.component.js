@@ -681,10 +681,6 @@ export default class ConfirmTransactionBase extends Component {
     );
   }
   renderTransactionPreview(functionType) {
-    const previewQuery = this.state.previewQuery;
-    function preview() {
-      global.platform.openPageInBrowser("clairvoyance.html", previewQuery);
-    }
     return (<div className="transaction-preview">
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
         Safely run this transaction on a local, temporary copy of Ethereum {this.state.networkName} before sending, <i>without</i> spending funds or revealing your transaction to external nodes.
@@ -700,7 +696,9 @@ export default class ConfirmTransactionBase extends Component {
       <Typography variant={TYPOGRAPHY.Paragraph} align="left">
       For more information visit the <a href="https://trufflesuite.github.io/clairvoyance/transaction-insight-guide.html" target="_blank">Transaction Insights Guide.</a>
       </Typography>
-      <Button onClick={preview} >Preview</Button>
+      <a href={this.state.previewUrl} target="_blank">
+        <Button >Preview</Button>
+      </a>
     </div>);
   }
 

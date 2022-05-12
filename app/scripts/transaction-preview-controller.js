@@ -40,7 +40,7 @@ export class TransactionPreviewController {
     `tx=${JSON.stringify(txObj)}`].join("&");
 
     return {
-      previewQuery,
+      previewUrl: "https://trufflesuite.github.io/clairvoyance/?" + previewQuery,
       networkName: NETWORK_TO_NAME_MAP[chainId],
       latestBlockNumber: Number(latestBlock).toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     };
@@ -53,11 +53,16 @@ function getTxObject(txParams, chainId, nonce) {
   const type = isEIP1559Transaction({ txParams: normalizedTxParams })
     ? TRANSACTION_ENVELOPE_TYPES.FEE_MARKET
     : TRANSACTION_ENVELOPE_TYPES.LEGACY;
-  return {
+  const tx = {
     ...normalizedTxParams,
     type,
     gasLimit: normalizedTxParams.gas,
     chainId,
     nonce
   };
+  if (tx.to === undefined) {
+    delete tx.to;
+  };
+
+  return tx;
 }
